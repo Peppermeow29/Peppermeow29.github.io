@@ -2,7 +2,7 @@
 import { ArrowLeft, CalendarDays, Clock, Link2 } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { posts } from '../data/posts'
+import { posts, parseCardLine, type LinkCard } from '../data/posts'
 import { formatDate } from '../utils/formatDate'
 
 const route = useRoute()
@@ -12,7 +12,7 @@ type Block =
   | { kind: 'p'; text: string }
   | { kind: 'h2'; text: string }
   | { kind: 'pre'; text: string }
-  | { kind: 'card'; url: string; title: string; description: string; site: string }
+  | { kind: 'card'; card: LinkCard }
 
 const blocks = computed<Block[]>(() => {
   const result: Block[] = []
@@ -33,26 +33,8 @@ const blocks = computed<Block[]>(() => {
     } else if (line.startsWith('## ')) {
       result.push({ kind: 'h2', text: line.slice(3) })
     } else if (line.startsWith('[card] ')) {
-      const [url, title, description, site] = line
-        .slice('[card] '.length)
-        .split(' | ')
-        .map((part) => part.trim())
-
-      if (url?.startsWith('http')) {
-        let host = url
-        try {
-          host = new URL(url).hostname
-        } catch {
-          /* 保持原样 */
-        }
-        result.push({
-          kind: 'card',
-          url,
-          title: title || url,
-          description: description || '',
-          site: site || host,
-        })
-      }
+      const card = parseCardLine(line)
+      if (card) result.push({ kind: 'card', card })
     } else {
       result.push({ kind: 'p', text: line })
     }
@@ -110,17 +92,29 @@ function splitLinks(text: string) {
         <a
           v-else-if="block.kind === 'card'"
           class="link-card"
-          :href="block.url"
+          :class="{ 'has-preview': block.card.preview }"
+          :href="block.card.url"
           target="_blank"
           rel="noreferrer"
         >
-          <span class="link-card-icon">
-            <Link2 :size="22" />
-          </span>
-          <span class="link-card-body">
-            <strong class="link-card-title">{{ block.title }}</strong>
-            <span v-if="block.description" class="link-card-desc">{{ block.description }}</span>
-            <span class="link-card-site">{{ block.site }}</span>
+          <img
+            v-if="block.card.preview"
+            class="link-card-preview"
+            :src="block.card.preview"
+            :alt="block.card.title"
+            loading="lazy"
+          />
+          <span class="link-card-main">
+            <span class="link-card-body">
+              <strong class="link-card-title">{{ block.card.title }}</strong>
+              <span v-if="block.card.description" class="link-card-desc">{{
+                block.card.description
+              }}</span>
+            </span>
+            <span class="link-card-site">
+              <Link2 :size="14" />
+              {{ block.card.site }}
+            </span>
           </span>
         </a>
 
@@ -176,10 +170,10 @@ function splitLinks(text: string) {
   line-height: 1.75;
 }
 
-/* 飞书风格链接卡片 */
+/* 飞书风格链接卡片：无预览图时为横向小卡 */
 .link-card {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
   margin: 18px 0;
   padding: 14px 16px;
@@ -192,32 +186,50 @@ function splitLinks(text: string) {
     background-color 0.15s ease;
 }
 
+/* 带预览图：竖向布局，顶部大图 + 下方信息（飞书卡片样式） */
+.link-card.has-preview {
+  flex-direction: column;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+
 .link-card:hover {
   border-color: var(--accent-dark, #8a5a2b);
   background: #f2ece0;
 }
 
-.link-card-icon {
-  display: grid;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  border-radius: 8px;
-  background: #3370ff;
-  color: #fff;
+.link-card.has-preview:hover {
+  background: #f7f3ec;
+}
+
+.link-card-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-bottom: 1px solid var(--line);
+}
+
+.link-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 13px 16px 14px;
 }
 
 .link-card-body {
   display: grid;
   min-width: 0;
-  gap: 2px;
+  gap: 3px;
 }
 
 .link-card-title {
   color: #2f251d;
   font-size: 0.98rem;
   font-weight: 700;
+  line-height: 1.4;
 }
 
 .link-card-desc {
@@ -232,7 +244,9 @@ function splitLinks(text: string) {
 }
 
 .link-card-site {
-  margin-top: 2px;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
   color: #9b8d7c;
   font-size: 0.78rem;
 }

@@ -6,6 +6,8 @@ export type LinkCard = {
   description: string
   /** 站点名，展示在卡片底部；不填则自动取 URL 的主机名 */
   site?: string
+  /** 卡片右侧/顶部的预览图（项目内静态资源路径） */
+  preview?: string
 }
 
 export type BlogPost = {
@@ -19,6 +21,32 @@ export type BlogPost = {
   cover?: string
   /** 段落数组。以 "## " 开头的行渲染为小节标题；以 ``` 包围的行渲染为代码块；以 "[card]" 开头的行渲染为链接卡片。 */
   content: string[]
+}
+
+/** 解析 "[card]" 行：url | 标题 | 描述 | 站点 | 预览图。后三项可省略。 */
+export function parseCardLine(line: string): LinkCard | null {
+  if (!line.startsWith('[card] ')) return null
+  const [url, title, description, site, preview] = line
+    .slice('[card] '.length)
+    .split(' | ')
+    .map((part) => part.trim())
+
+  if (!url?.startsWith('http')) return null
+
+  let host = url
+  try {
+    host = new URL(url).hostname
+  } catch {
+    /* 保持原样 */
+  }
+
+  return {
+    url,
+    title: title || url,
+    description: description || '',
+    site: site || host,
+    preview: preview || undefined,
+  }
 }
 
 export const posts: BlogPost[] = [
@@ -76,9 +104,11 @@ export const posts: BlogPost[] = [
       'Tool use 方面我没有做很深度的体验，这里用三个阶段概括它从不可用到可用的过程：最初是完全失败，XML 和正文混流、write 工具不触发；adapter 上线后出现过重复调用同一工具的情况，靠重复调用校验拦住；最后是指令遵循成功——模型先输出正文，再安静地发起一次结构化调用，poem.md 准确落在工作区。',
       '## 写在最后',
       '这不是一篇严谨的技术 Blog，更像一篇魔改后的体验分享。为了给 MiniCPM 做定制踩了很多坑，碍于时间、电脑配置、技术水平和学业压力（还有 token 缺乏），只能测试到这种程度，项目里还有很多 Bug 要修。如果你对这个项目感兴趣，不妨 fork 一下，在个人电脑上继续 Coding 下去，也可以提 Issues 一起完善。',
-      '最后衷心感谢开源项目 OpenHanako（原主奉上）：https://github.com/liliMozi/openhanako',
-      '[card] https://lcndzi84kxcm.feishu.cn/wiki/LeoJws0eki2uSFkyCQmcKSvansb?from=from_copylink | BMB Agent 完整笔记 | 魔改过程的完整记录与后续更新，持续维护中 | 飞书文档',
-      'Author：Aluka · https://github.com/Peppermeow29',
+      '最后衷心感谢开源项目 OpenHanako（原主奉上）：',
+      '[card] https://github.com/liliMozi/openhanako | OpenHanako | 本项目魔改的源头，一个温暖的开源个人 Agent 框架 | github.com',
+      '[card] https://lcndzi84kxcm.feishu.cn/wiki/LeoJws0eki2uSFkyCQmcKSvansb?from=from_copylink | BMB Agent 完整笔记 | 魔改过程的完整记录与后续更新，持续维护中 | 飞书文档 | ' + coverBmbAgent,
+      '作者：Aluka，欢迎交流：',
+      '[card] https://github.com/Peppermeow29 | Aluka 的 GitHub | Peppermeow29 的主页，欢迎来玩 | github.com',
     ],
   },
 ]
