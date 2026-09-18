@@ -24,7 +24,7 @@ const recentPosts = posts.slice(0, 3)
       </div>
     </div>
 
-    <aside class="featured-panel" aria-label="推荐文章">
+    <aside v-if="featuredPost" class="featured-panel" aria-label="推荐文章">
       <div class="panel-topline">
         <span>Featured</span>
         <Sparkles :size="18" />
@@ -48,7 +48,11 @@ const recentPosts = posts.slice(0, 3)
       <h2>最近更新</h2>
     </div>
 
-    <div class="post-grid">
+    <div v-if="recentPosts.length === 0" class="empty-state">
+      还没有文章，去写第一篇吧。
+    </div>
+
+    <div v-else class="post-grid">
       <article v-for="post in recentPosts" :key="post.slug" class="post-card">
         <div>
           <span class="category-pill">{{ post.category }}</span>
