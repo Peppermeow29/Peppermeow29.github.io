@@ -1,5 +1,13 @@
 import coverBmbAgent from '../assets/cover-bmb-agent.jpg'
 
+export type LinkCard = {
+  url: string
+  title: string
+  description: string
+  /** 站点名，展示在卡片底部；不填则自动取 URL 的主机名 */
+  site?: string
+}
+
 export type BlogPost = {
   slug: string
   title: string
@@ -9,7 +17,7 @@ export type BlogPost = {
   category: string
   tags: string[]
   cover?: string
-  /** 段落数组。以 "## " 开头的行渲染为小节标题；以 ``` 包围的行渲染为代码块。 */
+  /** 段落数组。以 "## " 开头的行渲染为小节标题；以 ``` 包围的行渲染为代码块；以 "[card]" 开头的行渲染为链接卡片。 */
   content: string[]
 }
 
@@ -69,7 +77,7 @@ export const posts: BlogPost[] = [
       '## 写在最后',
       '这不是一篇严谨的技术 Blog，更像一篇魔改后的体验分享。为了给 MiniCPM 做定制踩了很多坑，碍于时间、电脑配置、技术水平和学业压力（还有 token 缺乏），只能测试到这种程度，项目里还有很多 Bug 要修。如果你对这个项目感兴趣，不妨 fork 一下，在个人电脑上继续 Coding 下去，也可以提 Issues 一起完善。',
       '最后衷心感谢开源项目 OpenHanako（原主奉上）：https://github.com/liliMozi/openhanako',
-      '项目的完整笔记和后续更新都放在飞书：https://lcndzi84kxcm.feishu.cn/wiki/LeoJws0eki2uSFkyCQmcKSvansb?from=from_copylink',
+      '[card] https://lcndzi84kxcm.feishu.cn/wiki/LeoJws0eki2uSFkyCQmcKSvansb?from=from_copylink | BMB Agent 完整笔记 | 魔改过程的完整记录与后续更新，持续维护中 | 飞书文档',
       'Author：Aluka · https://github.com/Peppermeow29',
     ],
   },
