@@ -5,7 +5,7 @@ import { Github, Mail, PenLine } from 'lucide-vue-next'
 <template>
   <section class="page-intro about-intro">
     <p class="eyebrow">About</p>
-    <h1>关于 MyBlog</h1>
+    <h1>关于 Z.Coding Blog</h1>
     <p>
       这是一个用于记录个人技术实践和思考的静态博客。它关注稳定、清晰和可维护，而不是复杂的后台系统。
     </p>

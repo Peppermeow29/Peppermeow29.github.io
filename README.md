@@ -1,4 +1,4 @@
-# Peppermeow29 Blog
+# Z.Coding Blog
 
 这是一个使用 Vue 3 + Vite 搭建的个人静态博客，计划部署到 GitHub Pages 作为 GitHub 主页博客。
 
@@ -52,7 +52,7 @@ Peppermeow29.github.io
 git init
 git branch -M main
 git add .
-git commit -m "init myblog"
+git commit -m "init zcoding-blog"
 git remote add origin https://github.com/Peppermeow29/Peppermeow29.github.io.git
 git push -u origin main
 ```

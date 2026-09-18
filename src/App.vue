@@ -22,9 +22,9 @@ function closeMenu() {
 <template>
   <div class="site-shell">
     <header class="site-header">
-      <RouterLink class="brand" to="/" aria-label="MyBlog 首页" @click="closeMenu">
-        <span class="brand-mark">M</span>
-        <span>MyBlog</span>
+      <RouterLink class="brand" to="/" aria-label="Z.Coding Blog 首页" @click="closeMenu">
+        <span class="brand-mark">Z</span>
+        <span>Z.Coding Blog</span>
       </RouterLink>
 
       <nav class="desktop-nav" aria-label="主导航">
@@ -77,7 +77,7 @@ function closeMenu() {
 
     <footer class="site-footer">
       <div>
-        <strong>MyBlog</strong>
+        <strong>Z.Coding Blog</strong>
         <p>把工程经验、阅读笔记和长期思考留在一个安静的地方。</p>
       </div>
       <span>© {{ currentYear }}</span>
