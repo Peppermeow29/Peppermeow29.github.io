@@ -35,6 +35,20 @@ const blocks = computed<Block[]>(() => {
 
   return result
 })
+
+/** 把段落文本里的裸 URL 拆成 文本/链接 片段，供模板渲染成 <a> */
+const URL_RE = /(https?:\/\/[^\s，。；、）)]+)/g
+
+function splitLinks(text: string) {
+  // split 带捕获组时，结果数组里 URL 与纯文本交替出现，直接按前缀判断即可
+  return text
+    .split(URL_RE)
+    .filter(Boolean)
+    .map((part) => ({
+      url: part.startsWith('http') ? part : null,
+      text: part,
+    }))
+}
 </script>
 
 <template>
@@ -66,7 +80,12 @@ const blocks = computed<Block[]>(() => {
       <template v-for="(block, index) in blocks" :key="index">
         <h2 v-if="block.kind === 'h2'">{{ block.text }}</h2>
         <pre v-else-if="block.kind === 'pre'"><code>{{ block.text }}</code></pre>
-        <p v-else>{{ block.text }}</p>
+        <p v-else>
+          <template v-for="(seg, segIndex) in splitLinks(block.text)" :key="segIndex">
+            <a v-if="seg.url" :href="seg.url" target="_blank" rel="noreferrer">{{ seg.text }}</a>
+            <template v-else>{{ seg.text }}</template>
+          </template>
+        </p>
       </template>
     </div>
 
@@ -94,6 +113,13 @@ const blocks = computed<Block[]>(() => {
   font-size: 1.42rem;
   letter-spacing: 0.2px;
   color: #2f251d;
+}
+
+.prose a {
+  color: var(--accent-dark, #8a5a2b);
+  word-break: break-all;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .prose pre {

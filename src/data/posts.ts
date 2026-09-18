@@ -69,6 +69,7 @@ export const posts: BlogPost[] = [
       '## 写在最后',
       '这不是一篇严谨的技术 Blog，更像一篇魔改后的体验分享。为了给 MiniCPM 做定制踩了很多坑，碍于时间、电脑配置、技术水平和学业压力（还有 token 缺乏），只能测试到这种程度，项目里还有很多 Bug 要修。如果你对这个项目感兴趣，不妨 fork 一下，在个人电脑上继续 Coding 下去，也可以提 Issues 一起完善。',
       '最后衷心感谢开源项目 OpenHanako（原主奉上）：https://github.com/liliMozi/openhanako',
+      '项目的完整笔记和后续更新都放在飞书：https://lcndzi84kxcm.feishu.cn/wiki/LeoJws0eki2uSFkyCQmcKSvansb?from=from_copylink',
       'Author：Aluka · https://github.com/Peppermeow29',
     ],
   },
