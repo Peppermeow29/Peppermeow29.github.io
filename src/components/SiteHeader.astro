@@ -1,0 +1,119 @@
+---
+import { Github, Menu, X } from 'lucide-astro'
+import { toRelativePath, withBase } from '../lib/url'
+
+interface Props {
+  pathname: string
+}
+
+const { pathname } = Astro.props
+const current = toRelativePath(pathname)
+
+const navItems = [
+  { label: '首页', href: withBase('/'), active: current === '/' },
+  { label: '文章', href: withBase('/articles/'), active: current.startsWith('/articles') },
+  { label: '关于', href: withBase('/about/'), active: current === '/about' },
+]
+---
+
+<header class="site-header">
+  <a class="brand" href={withBase('/')} aria-label="Z.Coding Blog 首页">
+    <span class="brand-mark">Z</span>
+    <span>Z.Coding Blog</span>
+  </a>
+
+  <nav class="desktop-nav" aria-label="主导航">
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={{ active: item.active }}
+          aria-current={item.active ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <a
+    class="header-link"
+    href="https://github.com/Peppermeow29"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub 主页"
+  >
+    <Github size={18} />
+  </a>
+
+  <button
+    class="menu-button"
+    type="button"
+    aria-expanded="false"
+    aria-controls="mobile-nav"
+    aria-label="打开导航"
+    data-menu-toggle
+  >
+    <span data-icon-open><Menu size={20} /></span>
+    <span data-icon-close><X size={20} /></span>
+  </button>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="移动端导航" hidden data-mobile-nav>
+  {
+    navItems.map((item) => (
+      <a
+        href={item.href}
+        class:list={{ active: item.active }}
+        aria-current={item.active ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+</nav>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]')
+  const panel = document.querySelector<HTMLElement>('[data-mobile-nav]')
+
+  if (toggle && panel) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true'
+      toggle.setAttribute('aria-expanded', String(!open))
+      toggle.setAttribute('aria-label', open ? '打开导航' : '关闭导航')
+      panel.hidden = open
+    })
+  }
+</script>
+
+<style>
+  .menu-button span {
+    display: contents;
+  }
+
+  .menu-button [data-icon-close] {
+    display: none;
+  }
+
+  .menu-button[aria-expanded='true'] [data-icon-open] {
+    display: none;
+  }
+
+  .menu-button[aria-expanded='true'] [data-icon-close] {
+    display: inline-flex;
+  }
+
+  .desktop-nav a.active,
+  .mobile-nav a.active {
+    background: #35271d;
+    color: #fff8ef;
+  }
+
+  @media (max-width: 900px) {
+    .mobile-nav a.active {
+      background: #35271d;
+      color: #fff8ef;
+    }
+  }
+</style>

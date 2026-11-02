@@ -1,0 +1,30 @@
+---
+import { ArrowRight, Clock } from 'lucide-astro'
+import type { Post } from '../lib/posts'
+import { postPath } from '../lib/posts'
+import { withBase } from '../lib/url'
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+const href = withBase(postPath(post))
+---
+
+<article class="post-card">
+  <div>
+    <span class="category-pill">{post.data.category}</span>
+    <h3><a href={href}>{post.data.title}</a></h3>
+    <p>{post.data.description}</p>
+  </div>
+  <div class="card-footer">
+    <span>
+      <Clock size={15} />
+      {post.data.readingTime}
+    </span>
+    <a href={href} aria-label={`阅读《${post.data.title}》`}>
+      <ArrowRight size={18} />
+    </a>
+  </div>
+</article>

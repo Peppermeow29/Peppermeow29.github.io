@@ -1,0 +1,20 @@
+---
+import { Rss } from 'lucide-astro'
+import { withBase } from '../lib/url'
+
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <div>
+    <strong>Z.Coding Blog</strong>
+    <p>把工程经验、阅读笔记和长期思考留在一个安静的地方。</p>
+  </div>
+  <div class="footer-meta">
+    <a href={withBase('/rss.xml')} aria-label="订阅 RSS">
+      <Rss size={15} />
+      RSS
+    </a>
+    <span>© {year}</span>
+  </div>
+</footer>

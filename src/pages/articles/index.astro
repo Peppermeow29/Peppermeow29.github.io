@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getPosts, postPath } from '../../lib/posts'
+import { formatDate } from '../../lib/formatDate'
+import { withBase } from '../../lib/url'
+import { ArrowUpRight, Search } from 'lucide-astro'
+
+const posts = await getPosts()
+
+function searchable(post: (typeof posts)[number]) {
+  return [post.data.title, post.data.description, post.data.category, ...post.data.tags]
+    .join(' ')
+    .toLowerCase()
+}
+---
+
+<BaseLayout title="文章" description="按照时间整理的全部文章，涵盖工程、部署、写作与产品观察。">
+  <section class="page-intro">
+    <p class="eyebrow">Archive</p>
+    <h1>文章</h1>
+    <p>按照时间整理的全部内容。你可以从工程、设计、部署等主题开始浏览。</p>
+  </section>
+
+  <section class="toolbar">
+    <Search size={18} />
+    <input
+      id="post-search"
+      type="search"
+      placeholder="搜索标题、标签或分类"
+      autocomplete="off"
+      aria-label="搜索文章"
+    />
+  </section>
+
+  <section class="article-list" aria-label="文章列表">
+    {
+      posts.map((post) => (
+        <article class="article-row" data-search={searchable(post)}>
+          <div class="article-date">
+            <span>{formatDate(post.data.date)}</span>
+            <strong>{post.data.category}</strong>
+          </div>
+
+          <div class="article-summary">
+            <a href={withBase(postPath(post))}>
+              <h2>{post.data.title}</h2>
+            </a>
+            <p>{post.data.description}</p>
+            <div class="tag-list">
+              {post.data.tags.map((tag) => (
+                <span>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <a
+            class="row-action"
+            href={withBase(postPath(post))}
+            aria-label={`打开《${post.data.title}》`}
+          >
+            <span class="row-action-label">阅读全文</span>
+            <ArrowUpRight size={19} />
+          </a>
+        </article>
+      ))
+    }
+
+    <div class="empty-state" id="search-empty" hidden>没有找到匹配的文章。</div>
+  </section>
+</BaseLayout>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('#post-search')
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('.article-row[data-search]'))
+  const empty = document.querySelector<HTMLElement>('#search-empty')
+
+  if (input) {
+    input.addEventListener('input', () => {
+      const keyword = input.value.trim().toLowerCase()
+      let visible = 0
+
+      for (const row of rows) {
+        const hit = keyword === '' || (row.dataset.search ?? '').includes(keyword)
+        row.hidden = !hit
+        if (hit) visible += 1
+      }
+
+      if (empty) empty.hidden = visible > 0
+    })
+  }
+</script>

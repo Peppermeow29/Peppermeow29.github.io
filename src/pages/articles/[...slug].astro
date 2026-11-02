@@ -1,0 +1,123 @@
+---
+import { render } from 'astro:content'
+import { Image, getImage } from 'astro:assets'
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, PenLine } from 'lucide-astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getPosts, postPath, type Post } from '../../lib/posts'
+import { formatDate } from '../../lib/formatDate'
+import { withBase } from '../../lib/url'
+
+export async function getStaticPaths() {
+  const posts = await getPosts()
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
+}
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+const { data } = post
+const { Content } = await render(post)
+
+const posts = await getPosts()
+const index = posts.findIndex((item) => item.id === post.id)
+const newer = index > 0 ? posts[index - 1] : undefined
+const older = index >= 0 ? posts[index + 1] : undefined
+
+// 社交平台大多只认 JPG/PNG，这里单独生成一张 1200px 宽的预览图。
+const ogImage = data.cover
+  ? (await getImage({ src: data.cover, width: 1200, format: 'jpeg', quality: 80 })).src
+  : undefined
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={ogImage}
+  type="article"
+  publishedTime={data.date}
+  updatedTime={data.updated}
+>
+  <article class="article-detail">
+    <a class="back-link" href={withBase('/articles/')}>
+      <ArrowLeft size={17} />
+      返回文章列表
+    </a>
+
+    <header class="article-hero">
+      <span class="category-pill">{data.category}</span>
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+      <div class="detail-meta">
+        <span>
+          <CalendarDays size={17} />
+          {formatDate(data.date)}
+        </span>
+        <span>
+          <Clock size={17} />
+          {data.readingTime}
+        </span>
+        {
+          data.updated && (
+            <span>
+              <PenLine size={17} />
+              更新于 {formatDate(data.updated)}
+            </span>
+          )
+        }
+      </div>
+    </header>
+
+    {
+      data.cover && (
+        <Image
+          class="article-cover"
+          src={data.cover}
+          alt={data.coverAlt ?? `${data.title} 封面`}
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 900px) 100vw, 850px"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="article-tags">
+      {data.tags.map((tag) => <span>{tag}</span>)}
+    </footer>
+
+    {
+      (newer || older) && (
+        <nav class="post-nav" aria-label="相邻文章">
+          {older ? (
+            <a class="post-nav-item" href={withBase(postPath(older))}>
+              <span class="post-nav-label">
+                <ArrowLeft size={15} />
+                较早一篇
+              </span>
+              <strong>{older.data.title}</strong>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer ? (
+            <a class="post-nav-item is-next" href={withBase(postPath(newer))}>
+              <span class="post-nav-label">
+                较新一篇
+                <ArrowRight size={15} />
+              </span>
+              <strong>{newer.data.title}</strong>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
