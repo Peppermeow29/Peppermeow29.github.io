@@ -37,7 +37,7 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={withBase('/sitemap.xml')} />
     <link
