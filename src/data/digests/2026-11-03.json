@@ -1,6 +1,6 @@
 {
   "date": "2026-11-03",
-  "updatedAt": "2026-11-03T00:37:25.219Z",
+  "updatedAt": "2026-11-03T01:52:52.782Z",
   "items": [
     {
       "id": "https://tech.meituan.com/2026/10/29/AI-Coding-IN-Distributed-Storage-System.html",
@@ -40,6 +40,19 @@
       "discussionUrl": null,
       "points": null,
       "date": "2026-11-03T00:38:00.368Z"
+    },
+    {
+      "id": "https://sspai.com/post/118232",
+      "source": "sspai",
+      "sourceLabel": "少数派",
+      "category": "技术视野",
+      "title": "派早报：猛玛推出探境 3 直播相机、美团发布 LongCat-2.5 模型等",
+      "url": "https://sspai.com/post/118232",
+      "summary": "Raspberry Pi 再次上调 16 GB 产品价格、Keychron 推出 Q19 HE 8K 磁轴键盘等。 查看全文",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-11-03T00:18:34.000Z"
     },
     {
       "id": "https://www.ifanr.com/?p=1687189&utm_source=rss&utm_medium=rss&utm_campaign=",
@@ -118,6 +131,19 @@
       "discussionUrl": null,
       "points": null,
       "date": "2026-11-02T12:27:54.000Z"
+    },
+    {
+      "id": "https://www.ifanr.com/?p=1687178&utm_source=rss&utm_medium=rss&utm_campaign=",
+      "source": "ifanr",
+      "sourceLabel": "爱范儿",
+      "category": "技术视野",
+      "title": "全面支持华为手机！奔驰发布新款长轴距 E 级，42.38 万元起",
+      "url": "https://www.ifanr.com/1687178?utm_source=rss&utm_medium=rss&utm_campaign=",
+      "summary": "来看奔驰很清楚他们的短板所在。 #欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-11-02T12:18:09.000Z"
     },
     {
       "id": "https://www.solidot.org/story?sid=85774",
@@ -237,6 +263,19 @@
       "date": "2026-11-01T21:36:00.000Z"
     },
     {
+      "id": "https://huggingface.co/blog/nvidia/nemotron-halloween",
+      "source": "huggingface",
+      "sourceLabel": "Hugging Face",
+      "category": "AI 前沿",
+      "title": "nemotron-halloween",
+      "url": "https://huggingface.co/blog/nvidia/nemotron-halloween",
+      "summary": "",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-10-30T17:57:24.000Z"
+    },
+    {
       "id": "https://deepmind.google/blog/speeding-up-planning-decisions-with-ai/",
       "source": "deepmind",
       "sourceLabel": "Google DeepMind",
@@ -261,6 +300,45 @@
       "discussionUrl": null,
       "points": null,
       "date": "2026-10-30T00:13:03.000Z"
+    },
+    {
+      "id": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1",
+      "source": "huggingface",
+      "sourceLabel": "Hugging Face",
+      "category": "AI 前沿",
+      "title": "Granite Switch 4.1.1 — Update models like you update software",
+      "url": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1",
+      "summary": "",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-10-29T13:37:07.000Z"
+    },
+    {
+      "id": "https://huggingface.co/blog/announcing-project-protostar",
+      "source": "huggingface",
+      "sourceLabel": "Hugging Face",
+      "category": "AI 前沿",
+      "title": "Announcing Project ProtoStar: Making Publicly Funded Science AI-Ready",
+      "url": "https://huggingface.co/blog/announcing-project-protostar",
+      "summary": "",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-10-29T00:00:00.000Z"
+    },
+    {
+      "id": "https://huggingface.co/blog/mistral-large4",
+      "source": "huggingface",
+      "sourceLabel": "Hugging Face",
+      "category": "AI 前沿",
+      "title": "Welcome Le Chonk: Mistral Large 4 on Hugging Face",
+      "url": "https://huggingface.co/blog/mistral-large4",
+      "summary": "",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-10-29T00:00:00.000Z"
     },
     {
       "id": "https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
