@@ -7,7 +7,7 @@ import { getPosts, postPath } from '../lib/posts'
 import { getDigests, formatArchiveDate, FEED_PAGE_SIZE, ARCHIVE_SIZE } from '../lib/feed'
 import { formatDate } from '../lib/formatDate'
 import { withBase } from '../lib/url'
-import { ArrowRight, ArrowUpRight, Braces, Rss } from 'lucide-astro'
+import { ArrowRight, ArrowUpRight, Rss } from 'lucide-astro'
 
 const posts = await getPosts()
 const featured = posts.find((post) => post.data.featured) ?? posts[0]
@@ -16,88 +16,86 @@ const digests = getDigests()
 const latest = digests[0]
 const archive = digests.slice(0, ARCHIVE_SIZE)
 const latestItems = latest ? latest.items.slice(0, FEED_PAGE_SIZE) : []
-const feedIndex = recent.length > 0 ? '02' : '01'
-const focusIndex = recent.length > 0 ? '03' : '02'
 ---
 
 <BaseLayout>
   <section class="hero-section">
     <div class="hero-copy">
-      <div class="status-line">
-        <span class="status-dot"></span>
-        <span>AVAILABLE FOR NEW IDEAS</span>
-        <span class="status-divider">/</span>
-        <span>2026</span>
-      </div>
-      <p class="eyebrow">Code · Systems · Design · Writing</p>
-      <h1>记录技术实践，<br /><span>构建长期认知。</span></h1>
+      <p class="eyebrow">Z.Coding · Personal Blog</p>
+      <h1>记录技术，<br /><span>也记录思考。</span></h1>
       <p class="hero-lede">
-        关于工程、工具与产品的独立技术博客。把复杂问题拆解清楚，把实践经验沉淀为可复用的知识。
+        关于工程、工具与产品的独立博客。<br class="desktop-break" />把复杂问题讲清楚，把实践经验留下来。
       </p>
       <div class="hero-actions">
         <a class="primary-action" href={withBase('/articles/')}>
           开始阅读
           <ArrowRight size={17} />
         </a>
-        <a class="secondary-action" href={withBase('/about/')}>
-          关于作者
-          <ArrowUpRight size={16} />
-        </a>
+        <a class="secondary-action" href={withBase('/about/')}>关于作者</a>
       </div>
-      <dl class="hero-specs" aria-label="博客技术栈">
-        <div><dt>FRAMEWORK</dt><dd>Astro / Static</dd></div>
-        <div><dt>CONTENT</dt><dd>Markdown / Git</dd></div>
-        <div><dt>DEPLOY</dt><dd>GitHub Pages</dd></div>
-      </dl>
     </div>
+  </section>
 
-    {
-      featured && (
-        <aside class="featured-panel" aria-label="推荐文章">
-          <div class="panel-topline">
-            <span><i></i> FEATURED ARTICLE</span>
-            <span>NO. 001</span>
+  {
+    featured && (
+      <section class="featured-section" aria-labelledby="featured-heading">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Featured</p>
+            <h2 id="featured-heading">精选文章</h2>
           </div>
-          {featured.data.cover && (
-            <a class="featured-visual" href={withBase(postPath(featured))} tabindex="-1" aria-hidden="true">
+          <a class="text-link" href={withBase('/articles/')}>
+            全部文章
+            <ArrowRight size={15} />
+          </a>
+        </div>
+        <article class="featured-panel">
+          <a
+            class="featured-visual"
+            href={withBase(postPath(featured))}
+            aria-label={`阅读《${featured.data.title}》`}
+          >
+            {featured.data.cover && (
               <Image
                 src={featured.data.cover}
-                alt=""
-                widths={[480, 720]}
-                sizes="(max-width: 900px) 100vw, 420px"
+                alt={featured.data.coverAlt ?? featured.data.title}
+                widths={[640, 960]}
+                sizes="(max-width: 760px) 100vw, 52vw"
                 loading="eager"
               />
-              <span class="visual-label">FIELD NOTES / 001</span>
-            </a>
-          )}
+            )}
+          </a>
           <div class="featured-content">
             <span class="category-pill">{featured.data.category}</span>
-            <h2><a href={withBase(postPath(featured))}>{featured.data.title}</a></h2>
+            <h3><a href={withBase(postPath(featured))}>{featured.data.title}</a></h3>
             <p>{featured.data.description}</p>
             <div class="post-meta">
               <span>{formatDate(featured.data.date)}</span>
-              <span>{featured.data.readingTime} READ</span>
+              <span>{featured.data.readingTime}</span>
             </div>
             <a class="text-link" href={withBase(postPath(featured))}>
               阅读全文
               <ArrowUpRight size={16} />
             </a>
           </div>
-        </aside>
-      )
-    }
-  </section>
+        </article>
+      </section>
+    )
+  }
 
   {
     recent.length > 0 && (
-      <section class="section-grid">
-        <div class="section-heading">
-          <span class="section-index">01 / WRITING</span>
-          <p class="eyebrow">Latest writing</p>
-          <h2>最近更新</h2>
-          <p class="section-note">从真实项目出发，记录实现路径、关键决策与复盘。</p>
+      <section class="content-section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Latest writing</p>
+            <h2>最近更新</h2>
+          </div>
+          <a class="text-link" href={withBase('/articles/')}>
+            查看全部
+            <ArrowRight size={15} />
+          </a>
         </div>
-
         <div class="post-grid">
           {recent.map((post) => (
             <PostCard post={post} />
@@ -109,15 +107,13 @@ const focusIndex = recent.length > 0 ? '03' : '02'
 
   {
     latest && (
-      <section class="section-grid feed-section">
-        <div class="section-heading">
-          <span class="section-index">{feedIndex} / SIGNALS</span>
-          <p class="eyebrow">Frontier feed</p>
-          <h2>前沿速递</h2>
-          <p class="feed-note">
-            每天自动抓取 OpenAI、DeepSeek、Moonshot AI、GitHub、Hacker News
-            等多方来源，并按日期归档。以下是最新一天的内容，点击日期可回顾往期。
-          </p>
+      <section class="content-section feed-section">
+        <div class="section-header feed-heading">
+          <div>
+            <p class="eyebrow">Frontier feed</p>
+            <h2>前沿速递</h2>
+            <p class="section-note">聚合值得关注的技术动态，按日期整理，每天更新。</p>
+          </div>
           <nav class="feed-archive" aria-label="按日期浏览速递">
             {archive.map((digest) => (
               <a
@@ -136,12 +132,11 @@ const focusIndex = recent.length > 0 ? '03' : '02'
   }
 
   <section class="journal-band">
-    <div class="journal-icon"><Braces size={25} /></div>
     <div class="journal-copy">
-      <span class="section-index">{focusIndex} / FOCUS</span>
-      <h2>写作方向</h2>
+      <p class="eyebrow">Stay curious</p>
+      <h2>持续写作，持续更新。</h2>
     </div>
-    <p>持续整理前端工程、部署实践、论文与项目复盘，以及对产品界面和知识管理的观察。</p>
-    <a href={withBase('/rss.xml')} class="journal-link"><Rss size={16} /> 订阅更新</a>
+    <p>前端工程、部署实践、论文与项目复盘，以及对产品界面和知识管理的观察。</p>
+    <a href={withBase('/rss.xml')} class="journal-link"><Rss size={16} /> 订阅 RSS</a>
   </section>
 </BaseLayout>
