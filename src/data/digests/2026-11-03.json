@@ -1,7 +1,20 @@
 {
   "date": "2026-11-03",
-  "updatedAt": "2026-11-03T01:52:52.782Z",
+  "updatedAt": "2026-11-03T02:33:50.849Z",
   "items": [
+    {
+      "id": "https://www.ifanr.com/?p=1686623&utm_source=rss&utm_medium=rss&utm_campaign=",
+      "source": "ifanr",
+      "sourceLabel": "爱范儿",
+      "category": "技术视野",
+      "title": "乔布斯的「祖训」和触屏 MacBook，何以同时成立？｜硬哲学",
+      "url": "https://www.ifanr.com/1686623?utm_source=rss&utm_medium=rss&utm_campaign=",
+      "summary": "让特努斯引领一个全新的时代，全盘「拥有」这些新产品，无论它们最终的评价是好是坏。 #欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。",
+      "pdfUrl": null,
+      "discussionUrl": null,
+      "points": null,
+      "date": "2026-11-03T02:09:08.000Z"
+    },
     {
       "id": "https://tech.meituan.com/2026/10/29/AI-Coding-IN-Distributed-Storage-System.html",
       "source": "meituan-tech",
