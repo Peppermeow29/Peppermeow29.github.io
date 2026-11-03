@@ -5,12 +5,15 @@ import { withBase } from '../lib/url'
 
 <BaseLayout title="页面不存在" description="这个地址没有对应内容。" noindex>
   <section class="page-intro">
-    <p class="eyebrow">404</p>
-    <h1>这里没有内容</h1>
-    <p>页面可能已经被移动、重命名，或者链接本身就写错了。</p>
-    <div class="hero-actions">
-      <a class="primary-action" href={withBase('/')}>回到首页</a>
-      <a class="secondary-action" href={withBase('/articles/')}>浏览文章</a>
+    <div>
+      <p class="eyebrow">Error / 404</p>
+      <h1>这里没有内容<span class="title-dot">.</span></h1>
+      <p>页面可能已经被移动、重命名，或者链接本身就写错了。</p>
+      <div class="hero-actions">
+        <a class="primary-action" href={withBase('/')}>回到首页</a>
+        <a class="secondary-action" href={withBase('/articles/')}>浏览文章</a>
+      </div>
     </div>
+    <span class="page-code" aria-hidden="true">/NOT_FOUND</span>
   </section>
 </BaseLayout>

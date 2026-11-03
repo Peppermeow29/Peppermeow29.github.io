@@ -6,11 +6,13 @@ const year = new Date().getFullYear()
 ---
 
 <footer class="site-footer">
-  <div>
+  <div class="footer-brand">
+    <span class="footer-status"><i></i> SYSTEM ONLINE</span>
     <strong>Z.Coding Blog</strong>
-    <p>把工程经验、阅读笔记和长期思考留在一个安静的地方。</p>
+    <p>记录工程实践，沉淀长期认知。</p>
   </div>
   <div class="footer-meta">
+    <span class="footer-build">BUILT WITH ASTRO</span>
     <a href={withBase('/rss.xml')} aria-label="订阅 RSS">
       <Rss size={15} />
       RSS

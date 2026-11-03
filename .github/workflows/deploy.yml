@@ -4,9 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # UTC 1:00 = 北京时间每天 9:00，覆盖 arXiv 当日 announce 与 HN 前 24 小时热点
+    - cron: '0 1 * * *'
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -29,6 +32,26 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # 构建期抓取前沿内容并写入每日归档 src/data/digests/。
+      # 脚本内部容错：单源失败只告警，全部失败时不写归档，构建不会失败。
+      - name: Fetch tech feeds
+        run: node scripts/fetch-feeds.mjs
+
+      # 把每日归档回写仓库，实现"每天的消息"持久沉淀（[skip ci] 防止循环触发）。
+      - name: Persist digest archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data
+          if git diff --cached --quiet; then
+            echo "No digest changes to commit."
+          else
+            git commit -m "chore(feeds): update digest archive [skip ci]"
+            git push || echo "::warning::digest push failed, archive stays local for this build"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Type check
         run: npm run check

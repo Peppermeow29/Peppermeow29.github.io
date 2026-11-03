@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import TechFeed from '../../components/TechFeed.astro'
+import { withBase } from '../../lib/url'
+import {
+  getDigests,
+  getDigestByDate,
+  groupDigestItems,
+  formatFullDate,
+  formatArchiveDate,
+} from '../../lib/feed'
+
+export function getStaticPaths() {
+  return getDigests().map((digest) => ({ params: { date: digest.date } }))
+}
+
+const { date } = Astro.params
+const digest = date ? getDigestByDate(date) : null
+const digests = getDigests()
+const index = digests.findIndex((d) => d.date === date)
+const older = index >= 0 ? digests[index + 1] : undefined
+const newer = index > 0 ? digests[index - 1] : undefined
+const groups = digest ? groupDigestItems(digest.items) : []
+const sourceCount = digest ? new Set(digest.items.map((item) => item.sourceLabel)).size : 0
+---
+
+<BaseLayout>
+  {
+    digest ? (
+      <article class="digest-page">
+        <section class="page-intro">
+          <div>
+            <p class="eyebrow">Frontier digest / Daily signals</p>
+            <h1>{formatFullDate(digest.date)}<span class="title-dot">.</span></h1>
+            <p>
+              当天共收录 {digest.items.length} 条消息，来自 {sourceCount} 个来源。按分类整理，点击标题阅读原文。
+            </p>
+          </div>
+          <span class="page-code" aria-hidden="true">/DIGEST</span>
+        </section>
+
+        <div class="digest-body">
+          {groups.map((group) => (
+            <section class="digest-group">
+              <h2>
+                {group.category}
+                <span class="digest-count">{group.items.length}</span>
+              </h2>
+              <TechFeed items={group.items} />
+            </section>
+          ))}
+        </div>
+
+        <nav class="post-nav" aria-label="切换日期">
+          {older ? (
+            <a class="post-nav-item" href={withBase(`/digest/${older.date}/`)}>
+              <span class="post-nav-label">← 更早一天</span>
+              <strong>{formatArchiveDate(older.date)}</strong>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer ? (
+            <a class="post-nav-item is-next" href={withBase(`/digest/${newer.date}/`)}>
+              <span class="post-nav-label">更新一天 →</span>
+              <strong>{formatArchiveDate(newer.date)}</strong>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      </article>
+    ) : (
+      <div class="empty-state standalone">
+        <p>未找到该日期的速递归档。</p>
+      </div>
+    )
+  }
+</BaseLayout>

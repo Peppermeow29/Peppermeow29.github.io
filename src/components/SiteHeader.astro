@@ -18,8 +18,11 @@ const navItems = [
 
 <header class="site-header">
   <a class="brand" href={withBase('/')} aria-label="Z.Coding Blog 首页">
-    <span class="brand-mark">Z</span>
-    <span>Z.Coding Blog</span>
+    <span class="brand-mark" aria-hidden="true">Z<span>_</span></span>
+    <span class="brand-copy">
+      <strong>Z.Coding</strong>
+      <small>ENGINEERING NOTES</small>
+    </span>
   </a>
 
   <nav class="desktop-nav" aria-label="主导航">
@@ -102,18 +105,5 @@ const navItems = [
 
   .menu-button[aria-expanded='true'] [data-icon-close] {
     display: inline-flex;
-  }
-
-  .desktop-nav a.active,
-  .mobile-nav a.active {
-    background: #35271d;
-    color: #fff8ef;
-  }
-
-  @media (max-width: 900px) {
-    .mobile-nav a.active {
-      background: #35271d;
-      color: #fff8ef;
-    }
   }
 </style>

@@ -1,0 +1,55 @@
+---
+import { FileText, MessageSquare, ThumbsUp } from 'lucide-astro'
+import { FEED_PAGE_SIZE, formatFeedDate, type FeedItem } from '../lib/feed'
+
+interface Props {
+  items: FeedItem[]
+}
+
+const { items } = Astro.props
+const visible = items.slice(0, FEED_PAGE_SIZE)
+---
+
+<ol class="feed-list">
+  {
+    visible.map((item) => (
+      <li class="feed-item">
+        <span class="feed-item-date" aria-hidden="true">
+          {formatFeedDate(item.date)}
+        </span>
+        <div class="feed-item-body">
+          <a
+            class="feed-item-title"
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {item.title}
+          </a>
+          {item.summary && <p class="feed-item-summary">{item.summary}</p>}
+          <div class="feed-item-meta">
+            <span class="feed-source-pill">{item.sourceLabel}</span>
+            {item.points !== null && (
+              <span class="feed-item-stat">
+                <ThumbsUp size={13} />
+                {item.points}
+              </span>
+            )}
+            {item.pdfUrl && (
+              <a href={item.pdfUrl} target="_blank" rel="noopener noreferrer">
+                <FileText size={13} />
+                PDF
+              </a>
+            )}
+            {item.discussionUrl && (
+              <a href={item.discussionUrl} target="_blank" rel="noopener noreferrer">
+                <MessageSquare size={13} />
+                讨论
+              </a>
+            )}
+          </div>
+        </div>
+      </li>
+    ))
+  }
+</ol>

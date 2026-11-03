@@ -1,50 +1,88 @@
 ---
+import { Image } from 'astro:assets'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import PostCard from '../components/PostCard.astro'
+import TechFeed from '../components/TechFeed.astro'
 import { getPosts, postPath } from '../lib/posts'
+import { getDigests, formatArchiveDate, FEED_PAGE_SIZE, ARCHIVE_SIZE } from '../lib/feed'
 import { formatDate } from '../lib/formatDate'
 import { withBase } from '../lib/url'
-import { ArrowRight, BookOpen, Sparkles } from 'lucide-astro'
+import { ArrowRight, ArrowUpRight, Braces, Rss } from 'lucide-astro'
 
 const posts = await getPosts()
 const featured = posts.find((post) => post.data.featured) ?? posts[0]
 const recent = posts.filter((post) => post.id !== featured?.id).slice(0, 3)
+const digests = getDigests()
+const latest = digests[0]
+const archive = digests.slice(0, ARCHIVE_SIZE)
+const latestItems = latest ? latest.items.slice(0, FEED_PAGE_SIZE) : []
+const feedIndex = recent.length > 0 ? '02' : '01'
+const focusIndex = recent.length > 0 ? '03' : '02'
 ---
 
 <BaseLayout>
   <section class="hero-section">
     <div class="hero-copy">
-      <p class="eyebrow">Personal notes on code, design, and writing</p>
-      <h1>一个安静、清晰、适合长期写作的个人博客。</h1>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <span>AVAILABLE FOR NEW IDEAS</span>
+        <span class="status-divider">/</span>
+        <span>2026</span>
+      </div>
+      <p class="eyebrow">Code · Systems · Design · Writing</p>
+      <h1>记录技术实践，<br /><span>构建长期认知。</span></h1>
       <p class="hero-lede">
-        记录工程实践、产品观察和那些值得慢慢沉淀的想法。文章以 Markdown 编写，由 Astro 构建，发布在 GitHub Pages。
+        关于工程、工具与产品的独立技术博客。把复杂问题拆解清楚，把实践经验沉淀为可复用的知识。
       </p>
       <div class="hero-actions">
         <a class="primary-action" href={withBase('/articles/')}>
-          阅读文章
-          <ArrowRight size={18} />
+          开始阅读
+          <ArrowRight size={17} />
         </a>
-        <a class="secondary-action" href={withBase('/about/')}>关于我</a>
+        <a class="secondary-action" href={withBase('/about/')}>
+          关于作者
+          <ArrowUpRight size={16} />
+        </a>
       </div>
+      <dl class="hero-specs" aria-label="博客技术栈">
+        <div><dt>FRAMEWORK</dt><dd>Astro / Static</dd></div>
+        <div><dt>CONTENT</dt><dd>Markdown / Git</dd></div>
+        <div><dt>DEPLOY</dt><dd>GitHub Pages</dd></div>
+      </dl>
     </div>
 
     {
       featured && (
         <aside class="featured-panel" aria-label="推荐文章">
           <div class="panel-topline">
-            <span>Featured</span>
-            <Sparkles size={18} />
+            <span><i></i> FEATURED ARTICLE</span>
+            <span>NO. 001</span>
           </div>
-          <h2>{featured.data.title}</h2>
-          <p>{featured.data.description}</p>
-          <div class="post-meta">
-            <span>{formatDate(featured.data.date)}</span>
-            <span>{featured.data.readingTime}</span>
+          {featured.data.cover && (
+            <a class="featured-visual" href={withBase(postPath(featured))} tabindex="-1" aria-hidden="true">
+              <Image
+                src={featured.data.cover}
+                alt=""
+                widths={[480, 720]}
+                sizes="(max-width: 900px) 100vw, 420px"
+                loading="eager"
+              />
+              <span class="visual-label">FIELD NOTES / 001</span>
+            </a>
+          )}
+          <div class="featured-content">
+            <span class="category-pill">{featured.data.category}</span>
+            <h2><a href={withBase(postPath(featured))}>{featured.data.title}</a></h2>
+            <p>{featured.data.description}</p>
+            <div class="post-meta">
+              <span>{formatDate(featured.data.date)}</span>
+              <span>{featured.data.readingTime} READ</span>
+            </div>
+            <a class="text-link" href={withBase(postPath(featured))}>
+              阅读全文
+              <ArrowUpRight size={16} />
+            </a>
           </div>
-          <a class="text-link" href={withBase(postPath(featured))}>
-            打开文章
-            <ArrowRight size={16} />
-          </a>
         </aside>
       )
     }
@@ -54,8 +92,10 @@ const recent = posts.filter((post) => post.id !== featured?.id).slice(0, 3)
     recent.length > 0 && (
       <section class="section-grid">
         <div class="section-heading">
+          <span class="section-index">01 / WRITING</span>
           <p class="eyebrow">Latest writing</p>
           <h2>最近更新</h2>
+          <p class="section-note">从真实项目出发，记录实现路径、关键决策与复盘。</p>
         </div>
 
         <div class="post-grid">
@@ -67,11 +107,41 @@ const recent = posts.filter((post) => post.id !== featured?.id).slice(0, 3)
     )
   }
 
+  {
+    latest && (
+      <section class="section-grid feed-section">
+        <div class="section-heading">
+          <span class="section-index">{feedIndex} / SIGNALS</span>
+          <p class="eyebrow">Frontier feed</p>
+          <h2>前沿速递</h2>
+          <p class="feed-note">
+            每天自动抓取 OpenAI、DeepSeek、Moonshot AI、GitHub、Hacker News
+            等多方来源，并按日期归档。以下是最新一天的内容，点击日期可回顾往期。
+          </p>
+          <nav class="feed-archive" aria-label="按日期浏览速递">
+            {archive.map((digest) => (
+              <a
+                href={withBase(`/digest/${digest.date}/`)}
+                class:list={[{ active: digest.date === latest.date }]}
+              >
+                <strong>{formatArchiveDate(digest.date)}</strong>
+                <span>{digest.items.length} 条</span>
+              </a>
+            ))}
+          </nav>
+        </div>
+        <TechFeed items={latestItems} />
+      </section>
+    )
+  }
+
   <section class="journal-band">
-    <div>
-      <BookOpen size={24} />
+    <div class="journal-icon"><Braces size={25} /></div>
+    <div class="journal-copy">
+      <span class="section-index">{focusIndex} / FOCUS</span>
       <h2>写作方向</h2>
     </div>
-    <p>这里会持续整理前端工程、部署实践、论文与项目复盘，以及对产品界面和知识管理的观察。</p>
+    <p>持续整理前端工程、部署实践、论文与项目复盘，以及对产品界面和知识管理的观察。</p>
+    <a href={withBase('/rss.xml')} class="journal-link"><Rss size={16} /> 订阅更新</a>
   </section>
 </BaseLayout>

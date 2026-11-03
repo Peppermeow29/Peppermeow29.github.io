@@ -15,10 +15,13 @@ function searchable(post: (typeof posts)[number]) {
 ---
 
 <BaseLayout title="文章" description="按照时间整理的全部文章，涵盖工程、部署、写作与产品观察。">
-  <section class="page-intro">
-    <p class="eyebrow">Archive</p>
-    <h1>文章</h1>
-    <p>按照时间整理的全部内容。你可以从工程、设计、部署等主题开始浏览。</p>
+  <section class="page-intro archive-intro">
+    <div>
+      <p class="eyebrow">Knowledge archive / {String(posts.length).padStart(2, '0')}</p>
+      <h1>文章归档<span class="title-dot">.</span></h1>
+      <p>按时间整理的技术实践与思考。每一篇都始于一个真实问题，止于一套可复用的方法。</p>
+    </div>
+    <span class="page-code" aria-hidden="true">/ARTICLES</span>
   </section>
 
   <section class="toolbar">
@@ -34,9 +37,10 @@ function searchable(post: (typeof posts)[number]) {
 
   <section class="article-list" aria-label="文章列表">
     {
-      posts.map((post) => (
+      posts.map((post, index) => (
         <article class="article-row" data-search={searchable(post)}>
           <div class="article-date">
+            <span class="article-number">{String(index + 1).padStart(2, '0')}</span>
             <span>{formatDate(post.data.date)}</span>
             <strong>{post.data.category}</strong>
           </div>
