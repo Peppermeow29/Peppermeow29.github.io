@@ -5,8 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # UTC 1:00 = 北京时间每天 9:00，覆盖 arXiv 当日 announce 与 HN 前 24 小时热点
-    - cron: '0 1 * * *'
+    # UTC 1:17 = 北京时间每天 9:17。避开整点高负载窗口，降低 schedule 延迟或丢弃概率。
+    - cron: '17 1 * * *'
 
 permissions:
   contents: write
