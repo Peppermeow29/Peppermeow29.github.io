@@ -3,17 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # RSS 抓取推送为手动模式：在 Actions 页 "Run workflow" 手动触发（workflow_dispatch），
+  # 或本地运行 node scripts/fetch-feeds.mjs 后提交推送。不再使用 schedule 定时调度。
   workflow_dispatch:
-  schedule:
-    # GitHub schedule 为 best-effort：2026-08 起平台调度器故障频发，schedule 事件可能整日
-    # 不投递（run 根本不创建）。故设置多时段互为兜底；fetch-feeds.mjs 幂等（同日按 id
-    # 合并去重），重复运行无副作用。UTC 日期与北京日期在全部时段内保持一致。
-    # 主时段 UTC 1:17 = 北京 9:17，避开整点高负载窗口。
-    - cron: '17 1 * * *'
-    # 兜底 1：UTC 3:47 = 北京 11:47。
-    - cron: '47 3 * * *'
-    # 兜底 2：UTC 6:17 = 北京 14:17。
-    - cron: '17 6 * * *'
 
 permissions:
   contents: write
